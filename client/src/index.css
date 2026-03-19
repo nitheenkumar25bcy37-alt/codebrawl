@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;400;600&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg: #050810; --surface: #0d1117; --surface2: #161b22;
+  --surface3: #21262d; --border: #30363d;
+  --accent: #00f5ff; --accent2: #ff3864; --accent3: #39ff14;
+  --gold: #ffd700; --silver: #c0c0c0; --bronze: #cd7f32;
+  --text: #e6edf3; --text2: #8b949e;
+  --glow: 0 0 20px rgba(0,245,255,0.4);
+  --glow2: 0 0 20px rgba(255,56,100,0.4);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  min-height: 100vh; overflow-x: hidden;
+}
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px; pointer-events: none; z-index: 0;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
