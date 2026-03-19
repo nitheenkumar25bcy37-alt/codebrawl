@@ -1,5 +1,36 @@
 import { useEffect, useState, useRef } from 'react'
-
+const PROBLEMS_BANK = {
+  easy: {
+    title: 'Two Sum',
+    description: 'Given an array of integers nums and an integer target, return indices of the two numbers that add up to target.',
+    examples: [
+      { input: 'nums = [2,7,11,15], target = 9', output: '[0,1]' },
+      { input: 'nums = [3,2,4], target = 6', output: '[1,2]' }
+    ],
+    tags: ['Arrays', 'Hash Map'],
+    constraints: '2 ≤ nums.length ≤ 10⁴'
+  },
+  medium: {
+    title: 'Longest Substring Without Repeating Characters',
+    description: 'Given a string s, find the length of the longest substring without repeating characters.',
+    examples: [
+      { input: 's = "abcabcbb"', output: '3' },
+      { input: 's = "bbbbb"', output: '1' }
+    ],
+    tags: ['Sliding Window', 'String'],
+    constraints: '0 ≤ s.length ≤ 5×10⁴'
+  },
+  hard: {
+    title: 'Median of Two Sorted Arrays',
+    description: 'Given two sorted arrays nums1 and nums2, return the median. Time complexity must be O(log(m+n)).',
+    examples: [
+      { input: 'nums1 = [1,3], nums2 = [2]', output: '2.00000' },
+      { input: 'nums1 = [1,2], nums2 = [3,4]', output: '2.50000' }
+    ],
+    tags: ['Binary Search', 'Divide & Conquer'],
+    constraints: '0 ≤ m, n ≤ 1000'
+  }
+}
 const TEMPLATES = {
   c: `#include <stdio.h>\n\nint main() {\n    // Write your solution here\n    \n    return 0;\n}`,
   java: `public class Solution {\n    public static void main(String[] args) {\n        // Write your solution here\n    }\n}`,
@@ -32,8 +63,8 @@ export default function Battle({ socket, user, room, setRoom, setScreen }) {
     socket.on('player_left', ({ room: r }) => setPlayers(r.players))
 
     // Set problem from room if already started
-    if (room?.problem) setProblem(room.problem)
-socket.emit('get_problem', { code: room.code })
+const diff = room?.diff || 'medium'
+setProblem(PROBLEMS_BANK[diff])
 
     return () => {
       socket.off('battle_started'); socket.off('timer_tick'); socket.off('progress_updated')
