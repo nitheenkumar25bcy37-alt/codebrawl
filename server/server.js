@@ -241,6 +241,10 @@ io.on('connection', (socket) => {
     io.emit('room_list', Object.values(rooms).map(getRoomSummary));
     console.log('User disconnected:', socket.id);
   });
+  socket.on('get_problem', ({ code }) => {
+  const room = rooms[code];
+  if (room) socket.emit('problem_data', room.problem);
+});
 });
 
 // Health check

@@ -33,6 +33,7 @@ export default function Battle({ socket, user, room, setRoom, setScreen }) {
 
     // Set problem from room if already started
     if (room?.problem) setProblem(room.problem)
+socket.emit('get_problem', { code: room.code })
 
     return () => {
       socket.off('battle_started'); socket.off('timer_tick'); socket.off('progress_updated')
@@ -40,8 +41,28 @@ export default function Battle({ socket, user, room, setRoom, setScreen }) {
     }
   }, [])
 
-  useEffect(() => { if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight }, [chats])
+  useEffect(() => {
+    socket.on('battle_started', ({ room: r, problem: p }) => { setPlayers(r.players); setProblem(p) })
+    socket.on('timer_tick', ({ secondsLeft }) => setSeconds(secondsLeft))
+    socket.on('progress_updated', ({ players: pl }) => setPlayers(pl))
+    socket.on('player_solved', ({ name, solveTime, room: r }) => {
+      setPlayers(r.players)
+      setChats(c => [...c, { user: '🏆 SYSTEM', msg: `${name} solved it in ${solveTime}!` }])
+    })
+    socket.on('battle_ended', ({ room: r }) => { setPlayers(r.players); setWinner(r) })
+    socket.on('chat_message', ({ user: u, message }) => setChats(c => [...c, { user: u, msg: message }]))
+    socket.on('player_left', ({ room: r }) => setPlayers(r.players))
+    socket.on('problem_data', (p) => setProblem(p))
 
+    if (room?.problem) setProblem(room.problem)
+    socket.emit('get_problem', { code: room.code })
+
+    return () => {
+      socket.off('battle_started'); socket.off('timer_tick'); socket.off('progress_updated')
+      socket.off('player_solved'); socket.off('battle_ended'); socket.off('chat_message')
+      socket.off('player_left'); socket.off('problem_data')
+    }
+  }, [])
   function setLangAndCode(l) { setLang(l); setCode(TEMPLATES[l]) }
 
   function handleCodeChange(e) {
